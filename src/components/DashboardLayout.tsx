@@ -6,22 +6,28 @@ import {
   LogoutOutlined,
 } from "@ant-design/icons";
 import { Link, Outlet, useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { useSetAtom } from "jotai";
 import { logout } from "@/supabase/auth";
+import { userAtom } from "@/store/atoms";
 
 const { Header, Content, Sider } = Layout;
 
 const DashboardLayout: React.FC = () => {
   const navigate = useNavigate();
+  const setUser = useSetAtom(userAtom);
 
-  const handleLogout = async () => {
-    try {
-      await logout();
+  const { mutate: handleLogout } = useMutation({
+    mutationFn: logout,
+    onSuccess: () => {
       localStorage.removeItem("user");
+      setUser(null);
       navigate("/login");
-    } catch (error) {
+    },
+    onError: (error) => {
       console.error("Logout failed:", error);
-    }
-  };
+    },
+  });
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
@@ -49,7 +55,7 @@ const DashboardLayout: React.FC = () => {
           <Button
             type="primary"
             icon={<LogoutOutlined />}
-            onClick={handleLogout}
+            onClick={() => handleLogout()}
           >
             Logout
           </Button>
