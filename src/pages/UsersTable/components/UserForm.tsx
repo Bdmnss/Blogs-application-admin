@@ -1,6 +1,6 @@
 import React from "react";
 import { Form, Input, Button } from "antd";
-import { User } from "../UsersTable";
+import { User } from "../types";
 
 interface UserFormProps {
   initialValues: Partial<User & { password: string }>;
