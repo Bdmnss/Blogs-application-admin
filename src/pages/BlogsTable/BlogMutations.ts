@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/supabase";
-import { Blog } from "./BlogsTable";
+import { Blog } from "./types";
 
 export const useAddBlogMutation = () => {
   const queryClient = useQueryClient();

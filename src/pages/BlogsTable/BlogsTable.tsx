@@ -18,7 +18,10 @@ const BlogsTable: React.FC = () => {
     queryFn: async () => {
       const { data, error } = await supabase.from("blogs").select("*");
       if (error) throw new Error(error.message);
-      return data;
+      return data.map((blog: Blog) => ({
+        ...blog,
+        created_at: dayjs(blog.created_at).format("YYYY-MM-DD HH:mm"),
+      }));
     },
   });
 
@@ -37,19 +40,25 @@ const BlogsTable: React.FC = () => {
 
   const handleFinish = (values: {
     title_en: string;
+    title_ka: string;
     description_en: string;
+    description_ka: string;
   }) => {
     if (editingBlog) {
       editBlogMutation.mutate({
         ...editingBlog,
         title_en: values.title_en,
+        title_ka: values.title_ka,
         description_en: values.description_en,
+        description_ka: values.description_ka,
       });
     } else {
       const newBlog: Blog = {
         id: Date.now(),
         title_en: values.title_en,
+        title_ka: values.title_ka,
         description_en: values.description_en,
+        description_ka: values.description_ka,
         created_at: dayjs().format("YYYY-MM-DD HH:mm"),
       };
       addBlogMutation.mutate(newBlog);
@@ -72,7 +81,14 @@ const BlogsTable: React.FC = () => {
         footer={null}
       >
         <BlogForm
-          initialValues={editingBlog || { title_en: "", description_en: "" }}
+          initialValues={
+            editingBlog || {
+              title_en: "",
+              title_ka: "",
+              description_en: "",
+              description_ka: "",
+            }
+          }
           onFinish={handleFinish}
           editingBlog={editingBlog}
         />

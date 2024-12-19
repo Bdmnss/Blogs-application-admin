@@ -4,7 +4,12 @@ import { Blog } from "../types";
 
 interface BlogFormProps {
   initialValues: Partial<Blog>;
-  onFinish: (values: { title_en: string; description_en: string }) => void;
+  onFinish: (values: {
+    title_en: string;
+    title_ka: string;
+    description_en: string;
+    description_ka: string;
+  }) => void;
   editingBlog: Blog | null;
 }
 
@@ -13,20 +18,35 @@ const BlogForm: React.FC<BlogFormProps> = ({
   onFinish,
   editingBlog,
 }) => {
+  const handleFinish = (values: {
+    title_en: string;
+    title_ka: string;
+    description_en: string;
+    description_ka: string;
+  }) => {
+    onFinish(values);
+  };
+
   return (
-    <Form initialValues={initialValues} onFinish={onFinish}>
+    <Form initialValues={initialValues} onFinish={handleFinish}>
       <Form.Item
         name="title_en"
-        label="Title"
+        label="Title (EN)"
         rules={[{ required: true, message: "Please input the title!" }]}
       >
         <Input />
       </Form.Item>
+      <Form.Item name="title_ka" label="Title (KA)">
+        <Input />
+      </Form.Item>
       <Form.Item
         name="description_en"
-        label="Description"
+        label="Description (EN)"
         rules={[{ required: true, message: "Please input the description!" }]}
       >
+        <Input />
+      </Form.Item>
+      <Form.Item name="description_ka" label="Description (KA)">
         <Input />
       </Form.Item>
       <Form.Item>
