@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Modal, Form, Input, Button } from "antd";
 import { supabase } from "@/supabase";
 import EditableTable from "@/components/EditableTable";
+import dayjs from "dayjs";
 
 interface User {
   id: string;
@@ -10,6 +11,9 @@ interface User {
   username: string;
   email: string;
   phone_number: string;
+  created_at: string;
+  last_sign_in_at: string;
+  role: string;
 }
 
 const UsersTable: React.FC = () => {
@@ -28,8 +32,13 @@ const UsersTable: React.FC = () => {
           id: user.id,
           full_name: user.user_metadata?.full_name || "none",
           username: user.user_metadata?.username || "none",
-          email: user.email || "none",
+          email: user.user_metadata?.email || "none",
           phone_number: user.user_metadata?.phone_number || "none",
+          created_at: dayjs(user.created_at).format("YYYY-MM-DD HH:mm"),
+          last_sign_in_at: dayjs(user.last_sign_in_at).format(
+            "YYYY-MM-DD HH:mm"
+          ),
+          role: user.role || "none",
         })) || [];
 
       setUsers(mappedUsers);
@@ -86,6 +95,21 @@ const UsersTable: React.FC = () => {
       dataIndex: "phone_number",
       key: "phone_number",
     },
+    {
+      title: "Created At",
+      dataIndex: "created_at",
+      key: "created_at",
+    },
+    {
+      title: "Last Sign In",
+      dataIndex: "last_sign_in_at",
+      key: "last_sign_in_at",
+    },
+    {
+      title: "Role",
+      dataIndex: "role",
+      key: "role",
+    },
   ];
 
   const handleAdd = () => {
@@ -123,6 +147,9 @@ const UsersTable: React.FC = () => {
         username,
         email: values.email,
         phone_number: phoneNumber,
+        created_at: dayjs().format("YYYY-MM-DD HH:mm"),
+        last_sign_in_at: dayjs().format("YYYY-MM-DD HH:mm"),
+        role: "authenticated",
       };
       addUserMutation.mutate(newUser);
     }
