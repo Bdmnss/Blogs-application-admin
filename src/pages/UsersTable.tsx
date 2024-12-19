@@ -32,7 +32,7 @@ const UsersTable: React.FC = () => {
           id: user.id,
           full_name: user.user_metadata?.full_name || "none",
           username: user.user_metadata?.username || "none",
-          email: user.user_metadata?.email || "none",
+          email: user.email || "none",
           phone_number: user.user_metadata?.phone_number || "none",
           created_at: dayjs(user.created_at).format("YYYY-MM-DD HH:mm"),
           last_sign_in_at: dayjs(user.last_sign_in_at).format(
@@ -49,7 +49,15 @@ const UsersTable: React.FC = () => {
 
   const addUserMutation = useMutation({
     mutationFn: async (newUser: User) => {
-      const { data, error } = await supabase.from("profiles").insert(newUser);
+      const { data, error } = await supabase.auth.admin.createUser({
+        email: newUser.email,
+        password: "defaultpassword",
+        user_metadata: {
+          full_name: newUser.full_name,
+          username: newUser.username,
+          phone_number: newUser.phone_number,
+        },
+      });
       if (error) throw new Error(error.message);
       return data;
     },
@@ -61,10 +69,17 @@ const UsersTable: React.FC = () => {
 
   const editUserMutation = useMutation({
     mutationFn: async (updatedUser: User) => {
-      const { data, error } = await supabase
-        .from("profiles")
-        .update(updatedUser)
-        .eq("id", updatedUser.id);
+      const { data, error } = await supabase.auth.admin.updateUserById(
+        updatedUser.id,
+        {
+          email: updatedUser.email,
+          user_metadata: {
+            full_name: updatedUser.full_name,
+            username: updatedUser.username,
+            phone_number: updatedUser.phone_number,
+          },
+        }
+      );
       if (error) throw new Error(error.message);
       return data;
     },
