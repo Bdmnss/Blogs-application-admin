@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import React, { useState, useEffect } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Modal, Form, Input, Button } from "antd";
 import { supabase } from "@/supabase";
 import EditableTable from "@/components/EditableTable";
@@ -8,33 +8,35 @@ interface User {
   id: string;
   full_name: string;
   username: string;
+  email: string;
+  phone_number: string;
 }
 
 const UsersTable: React.FC = () => {
   const queryClient = useQueryClient();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [users, setUsers] = useState<User[]>([]);
 
-  const { data: users } = useQuery({
-    queryKey: ["users"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("id, full_name, username");
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const { data, error } = await supabase.auth.admin.listUsers();
       if (error) throw new Error(error.message);
-      return data.map(
-        (user: {
-          id: string;
-          full_name: string | null;
-          username: string | null;
-        }) => ({
-          ...user,
-          full_name: user.full_name || "",
-          username: user.username || "",
-        })
-      );
-    },
-  });
+
+      const mappedUsers =
+        data.users?.map((user) => ({
+          id: user.id,
+          full_name: user.user_metadata?.full_name || "none",
+          username: user.user_metadata?.username || "none",
+          email: user.email || "none",
+          phone_number: user.user_metadata?.phone_number || "none",
+        })) || [];
+
+      setUsers(mappedUsers);
+    };
+
+    fetchUsers();
+  }, []);
 
   const addUserMutation = useMutation({
     mutationFn: async (newUser: User) => {
@@ -74,6 +76,16 @@ const UsersTable: React.FC = () => {
       dataIndex: "username",
       key: "username",
     },
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+    },
+    {
+      title: "Phone Number",
+      dataIndex: "phone_number",
+      key: "phone_number",
+    },
   ];
 
   const handleAdd = () => {
@@ -86,11 +98,32 @@ const UsersTable: React.FC = () => {
     setIsModalVisible(true);
   };
 
-  const handleFinish = (values: { full_name: string; username: string }) => {
+  const handleFinish = (values: {
+    full_name: string;
+    username: string;
+    email: string;
+    phone_number: string;
+  }) => {
+    const fullName = values.full_name || "none";
+    const username = values.username || "none";
+    const phoneNumber = values.phone_number || "none";
+
     if (editingUser) {
-      editUserMutation.mutate({ ...editingUser, ...values });
+      editUserMutation.mutate({
+        ...editingUser,
+        full_name: fullName,
+        username,
+        phone_number: phoneNumber,
+        email: values.email,
+      });
     } else {
-      const newUser = { id: crypto.randomUUID(), ...values };
+      const newUser: User = {
+        id: crypto.randomUUID(),
+        full_name: fullName,
+        username,
+        email: values.email,
+        phone_number: phoneNumber,
+      };
       addUserMutation.mutate(newUser);
     }
   };
@@ -110,7 +143,14 @@ const UsersTable: React.FC = () => {
         footer={null}
       >
         <Form
-          initialValues={editingUser || { full_name: "", username: "" }}
+          initialValues={
+            editingUser || {
+              full_name: "",
+              username: "",
+              email: "",
+              phone_number: "",
+            }
+          }
           onFinish={handleFinish}
         >
           <Form.Item
@@ -124,6 +164,25 @@ const UsersTable: React.FC = () => {
             name="username"
             label="Username"
             rules={[{ required: true, message: "Please input the username!" }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="email"
+            label="Email"
+            rules={[
+              { required: true, message: "Please input the email!" },
+              { type: "email", message: "Please enter a valid email!" },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="phone_number"
+            label="Phone Number"
+            rules={[
+              { required: true, message: "Please input the phone number!" },
+            ]}
           >
             <Input />
           </Form.Item>
