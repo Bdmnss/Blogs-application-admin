@@ -3,8 +3,8 @@ import { Routes, Route } from "react-router-dom";
 import AuthLayout from "./components/AuthLayout";
 import DashboardLayout from "./components/DashboardLayout";
 import Login from "./pages/Login/Login";
-import BlogsTable from "./pages/BlogsTable";
-import UsersTable from "./pages/UsersTable";
+import BlogsTable from "./pages/BlogsTable/BlogsTable";
+import UsersTable from "./pages/UsersTable/UsersTable";
 import PrivateRoute from "./guards/PrivateRoute";
 import RestrictedRoute from "./guards/RestrictedRoute";
 
