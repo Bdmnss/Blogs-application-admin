@@ -7,7 +7,7 @@ import { RoutePaths } from "../routes/RoutePaths";
 const PrivateRoute: React.FC = () => {
   const user = useAtomValue(userAtom);
 
-  return user ? <Outlet /> : <Navigate to={RoutePaths.LOGIN} />;
+  return user ? <Outlet /> : <Navigate to={"/auth" + RoutePaths.LOGIN} />;
 };
 
 export default PrivateRoute;
