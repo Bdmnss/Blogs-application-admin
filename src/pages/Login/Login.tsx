@@ -1,32 +1,17 @@
 import React from "react";
 import { useForm, Controller } from "react-hook-form";
-import { useSetAtom } from "jotai";
-import { userAtom } from "@/store/atoms";
-import { useMutation } from "@tanstack/react-query";
-import { login } from "@/supabase/auth";
-import { useNavigate } from "react-router-dom";
 import { Card, Form, Input, Button } from "antd";
+import { useLogin } from "@/hooks/useAuth";
 import { validationRules } from "./validations";
 
 const Login: React.FC = () => {
-  const setUser = useSetAtom(userAtom);
-  const navigate = useNavigate();
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm<{ email: string; password: string }>();
 
-  const { mutate: handleLogin } = useMutation({
-    mutationKey: ["login"],
-    mutationFn: login,
-    onSuccess: (data) => {
-      const user = data.data.user;
-      setUser(user);
-      localStorage.setItem("user", JSON.stringify(user));
-      navigate("/");
-    },
-  });
+  const { mutate: handleLogin } = useLogin();
 
   const onSubmit = (data: { email: string; password: string }) => {
     handleLogin({ email: data.email, password: data.password });

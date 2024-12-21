@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useAddUserMutation } from "../userMutations";
+import { useAddUserMutation } from "@/hooks/useUsers";
 import UserForm from "../components/UserForm";
 import { User } from "../types";
 import dayjs from "dayjs";

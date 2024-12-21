@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useAddBlogMutation } from "../BlogMutations";
+import { useAddBlogMutation } from "@/hooks/useBlogs";
 import BlogForm from "../components/BlogForm";
 import { Blog } from "../types";
 import dayjs from "dayjs";

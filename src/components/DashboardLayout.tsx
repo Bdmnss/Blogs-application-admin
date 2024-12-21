@@ -5,33 +5,18 @@ import {
   FileTextOutlined,
   LogoutOutlined,
 } from "@ant-design/icons";
-import { Link, Outlet, useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
-import { useSetAtom } from "jotai";
-import { logout } from "@/supabase/auth";
-import { userAtom } from "@/store/atoms";
+import { Link, Outlet } from "react-router-dom";
+import { useLogout } from "@/hooks/useAuth";
 
 const { Header, Content, Sider } = Layout;
 
 const DashboardLayout: React.FC = () => {
-  const navigate = useNavigate();
-  const setUser = useSetAtom(userAtom);
-
-  const { mutate: handleLogout } = useMutation({
-    mutationFn: logout,
-    onSuccess: () => {
-      localStorage.removeItem("user");
-      setUser(null);
-      navigate("/login");
-    },
-    onError: (error) => {
-      console.error("Logout failed:", error);
-    },
-  });
+  const { mutate: handleLogout } = useLogout();
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <Sider>
+      <Sider collapsible>
+        <div className="logo" />
         <Menu theme="dark" mode="inline">
           <Menu.Item key="1" icon={<UserOutlined />}>
             <Link to="/users">Users</Link>
@@ -39,28 +24,16 @@ const DashboardLayout: React.FC = () => {
           <Menu.Item key="2" icon={<FileTextOutlined />}>
             <Link to="/blogs">Blogs</Link>
           </Menu.Item>
+          <Menu.Item key="3" icon={<LogoutOutlined />}>
+            <Button type="link" onClick={() => handleLogout()}>
+              Logout
+            </Button>
+          </Menu.Item>
         </Menu>
       </Sider>
-      <Layout>
-        <Header
-          style={{
-            background: "#fff",
-            padding: 0,
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <div></div>
-          <Button
-            type="primary"
-            icon={<LogoutOutlined />}
-            onClick={() => handleLogout()}
-          >
-            Logout
-          </Button>
-        </Header>
-        <Content style={{ margin: "16px" }}>
+      <Layout className="site-layout">
+        <Header className="site-layout-background" style={{ padding: 0 }} />
+        <Content style={{ margin: "16px 16px" }}>
           <Outlet />
         </Content>
       </Layout>

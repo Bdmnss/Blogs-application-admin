@@ -1,33 +1,13 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/supabase";
-import { useEditBlogMutation } from "../BlogMutations";
+import { useFetchBlog, useEditBlogMutation } from "@/hooks/useBlogs";
 import BlogForm from "../components/BlogForm";
-import { Blog } from "../types";
-import dayjs from "dayjs";
 
 const EditBlog: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const editBlogMutation = useEditBlogMutation();
-
-  const { data: blog, isLoading } = useQuery({
-    queryKey: ["blog", id],
-    queryFn: async () => {
-      if (!id) throw new Error("Blog ID is undefined");
-      const { data, error } = await supabase
-        .from("blogs")
-        .select("*")
-        .eq("id", id)
-        .single();
-      if (error) throw new Error(error.message);
-      return {
-        ...data,
-        created_at: dayjs(data.created_at).format("YYYY-MM-DD HH:mm"),
-      } as Blog;
-    },
-  });
+  const { data: blog, isLoading } = useFetchBlog(id);
 
   const handleFinish = (values: {
     title_en: string;
