@@ -4,6 +4,7 @@ import { useAddUserMutation } from "@/hooks/useUsers";
 import UserForm from "../components/UserForm";
 import { User } from "../types";
 import dayjs from "dayjs";
+import { RoutePaths } from "@/routes/RoutePaths";
 
 const AddUser: React.FC = () => {
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ const AddUser: React.FC = () => {
     };
     addUserMutation.mutate(newUser, {
       onSuccess: () => {
-        navigate("/users");
+        navigate(RoutePaths.USERS);
       },
     });
   };

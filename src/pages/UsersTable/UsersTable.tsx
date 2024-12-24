@@ -4,17 +4,18 @@ import EditableTable from "@/components/EditableTable";
 import { userColumns } from "./UserColumns";
 import { useFetchUsers } from "@/hooks/useUsers";
 import { User } from "./types";
+import { RoutePaths } from "@/routes/RoutePaths";
 
 const UsersTable: React.FC = () => {
   const navigate = useNavigate();
   const { data: users } = useFetchUsers();
 
   const handleAdd = () => {
-    navigate("/users/add");
+    navigate(RoutePaths.ADD_USER);
   };
 
   const handleEdit = (record: User) => {
-    navigate(`/users/edit/${record.id}`);
+    navigate(RoutePaths.EDIT_USER.replace(":id", record.id.toString()));
   };
 
   return (

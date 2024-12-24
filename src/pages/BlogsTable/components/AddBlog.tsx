@@ -4,6 +4,7 @@ import { useAddBlogMutation } from "@/hooks/useBlogs";
 import BlogForm from "../components/BlogForm";
 import { Blog } from "../types";
 import dayjs from "dayjs";
+import { RoutePaths } from "@/routes/RoutePaths";
 
 const AddBlog: React.FC = () => {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ const AddBlog: React.FC = () => {
     };
     addBlogMutation.mutate(newBlog, {
       onSuccess: () => {
-        navigate("/blogs");
+        navigate(RoutePaths.BLOGS);
       },
     });
   };
