@@ -4,7 +4,7 @@ import { useAddBlogMutation } from "@/hooks/useBlogs";
 import BlogForm from "../components/BlogForm";
 import { Blog } from "../types";
 import dayjs from "dayjs";
-import { RoutePaths } from "@/routes/RoutePaths";
+import { RoutePaths } from "@/enums/RoutePaths";
 
 const AddBlog: React.FC = () => {
   const navigate = useNavigate();

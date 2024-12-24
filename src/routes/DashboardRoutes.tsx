@@ -8,7 +8,7 @@ import UsersTable from "../pages/UsersTable/UsersTable";
 import AddUser from "../pages/UsersTable/components/AddUser";
 import EditUser from "../pages/UsersTable/components/EditUser";
 import PrivateRoute from "../guards/PrivateRoute";
-import { RoutePaths } from "./RoutePaths";
+import { RoutePaths } from "../enums/RoutePaths";
 
 const DashboardRoutes: React.FC = () => (
   <Routes>

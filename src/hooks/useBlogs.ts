@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/supabase";
 import { Blog } from "@/pages/BlogsTable/types";
 import dayjs from "dayjs";
-import { QueryKeys } from "./queryKeys";
+import { QueryKeys } from "../enums/queryKeys";
 
 export const useFetchBlogs = () => {
   return useQuery<Blog[]>({

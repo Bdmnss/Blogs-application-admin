@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import AuthLayout from "../components/AuthLayout";
 import Login from "../pages/Login/Login";
 import RestrictedRoute from "../guards/RestrictedRoute";
-import { RoutePaths } from "./RoutePaths";
+import { RoutePaths } from "../enums/RoutePaths";
 
 const AuthRoutes: React.FC = () => (
   <Routes>

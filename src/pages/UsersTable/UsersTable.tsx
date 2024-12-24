@@ -4,7 +4,7 @@ import EditableTable from "@/components/EditableTable";
 import { userColumns } from "./UserColumns";
 import { useFetchUsers } from "@/hooks/useUsers";
 import { User } from "./types";
-import { RoutePaths } from "@/routes/RoutePaths";
+import { RoutePaths } from "@/enums/RoutePaths";
 
 const UsersTable: React.FC = () => {
   const navigate = useNavigate();

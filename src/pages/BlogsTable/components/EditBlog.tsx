@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useFetchBlog, useEditBlogMutation } from "@/hooks/useBlogs";
 import BlogForm from "../components/BlogForm";
-import { RoutePaths } from "@/routes/RoutePaths";
+import { RoutePaths } from "@/enums/RoutePaths";
 
 const EditBlog: React.FC = () => {
   const { id } = useParams<{ id: string }>();

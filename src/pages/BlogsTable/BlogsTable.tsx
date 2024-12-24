@@ -4,7 +4,7 @@ import EditableTable from "@/components/EditableTable";
 import { blogColumns } from "./BlogColumns";
 import { useFetchBlogs } from "@/hooks/useBlogs";
 import { Blog } from "./types";
-import { RoutePaths } from "@/routes/RoutePaths";
+import { RoutePaths } from "@/enums/RoutePaths";
 
 const BlogsTable: React.FC = () => {
   const navigate = useNavigate();

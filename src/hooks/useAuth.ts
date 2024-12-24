@@ -3,7 +3,7 @@ import { logout, login } from "@/supabase/auth";
 import { useSetAtom } from "jotai";
 import { userAtom } from "@/store/atoms";
 import { useNavigate } from "react-router-dom";
-import { RoutePaths } from "@/routes/RoutePaths";
+import { RoutePaths } from "@/enums/RoutePaths";
 
 export const useLogout = () => {
   const setUser = useSetAtom(userAtom);
