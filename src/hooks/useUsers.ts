@@ -2,10 +2,11 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/supabase";
 import { User } from "@/pages/UsersTable/types";
 import dayjs from "dayjs";
+import { QueryKeys } from "./queryKeys";
 
 export const useFetchUsers = () => {
   return useQuery<User[]>({
-    queryKey: ["users"],
+    queryKey: [QueryKeys.USERS],
     queryFn: async () => {
       const { data, error } = await supabase.auth.admin.listUsers();
       if (error) throw new Error(error.message);
@@ -26,7 +27,7 @@ export const useFetchUsers = () => {
 
 export const useFetchUser = (id: string | undefined) => {
   return useQuery<User>({
-    queryKey: ["user", id],
+    queryKey: [QueryKeys.USER, id],
     queryFn: async () => {
       if (!id) throw new Error("User ID is undefined");
       const { data, error } = await supabase.auth.admin.getUserById(id);
@@ -65,7 +66,7 @@ export const useAddUserMutation = () => {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: [QueryKeys.USERS] });
     },
   });
 };
@@ -87,7 +88,7 @@ export const useEditUserMutation = () => {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: [QueryKeys.USERS] });
     },
   });
 };

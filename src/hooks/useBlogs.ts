@@ -2,10 +2,11 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/supabase";
 import { Blog } from "@/pages/BlogsTable/types";
 import dayjs from "dayjs";
+import { QueryKeys } from "./queryKeys";
 
 export const useFetchBlogs = () => {
   return useQuery<Blog[]>({
-    queryKey: ["blogs"],
+    queryKey: [QueryKeys.BLOGS],
     queryFn: async () => {
       const { data, error } = await supabase.from("blogs").select("*");
       if (error) throw new Error(error.message);
@@ -19,7 +20,7 @@ export const useFetchBlogs = () => {
 
 export const useFetchBlog = (id: string | undefined) => {
   return useQuery<Blog>({
-    queryKey: ["blog", id],
+    queryKey: [QueryKeys.BLOG, id],
     queryFn: async () => {
       if (!id) throw new Error("Blog ID is undefined");
       const { data, error } = await supabase
@@ -46,7 +47,7 @@ export const useAddBlogMutation = () => {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["blogs"] });
+      queryClient.invalidateQueries({ queryKey: [QueryKeys.BLOGS] });
     },
   });
 };
@@ -64,7 +65,7 @@ export const useEditBlogMutation = () => {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["blogs"] });
+      queryClient.invalidateQueries({ queryKey: [QueryKeys.BLOGS] });
     },
   });
 };
